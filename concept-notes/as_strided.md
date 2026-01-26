@@ -64,5 +64,61 @@ for i in n:         # loop through A's rows
             C[i, j] = A[i, k] + B[k, j]
 ```
 
+For the matrix $C$ when it's stored in data it's stored in row major format so
+using the same variables as above:
+
+```python
+# shape = [width, height]
+A.shape = [n, m]
+B.shape = [m, p]
+C.shape = [n, p]
+
+# (row * width) + col
+A[i, k] = A_arr[i*m + 1*k] = A_arr[i*m + j*0 + k*1]
+B[k, j] = B_arr[k*m + 1*j] = B_arr[i*0 + j*1 + k*m]
+C[i, j] = C_arr[i*p + 1*j] = C_arr[i*p + j*1 + k*0]
+
+dAdi = m
+dAdj = 0
+dAdk = 1
+
+A_stride = (m, 0, 1)
+
+dBdi = 0
+dBdj = 1
+dBdk = m
+
+B_stride = (0, 1, m)
+```
+
+To align $A$ for matmul, we need to expand it do include the $p$ dimension of
+$B$:
+
+$A_ext \in \mathbb{R}^{n \times p \times m}$
+$B_ext \in \mathbb{R}^{n \times p \times m}$
+
+
+
+```python
+Example:
+
+# shape = [n, m]
+A.shape = [2, 3]
+
+# shape = [m, p]
+B.shape = [3, 3]
+
+A = [[a0, a1, a2],
+     [a3, a4, a5]]
+
+B = [[b0, b1, b2],
+     [b3, b4, b5],
+     [b6, b7, b8]]
+
+A_ext.shape = [2, 3, 3]
+
+```
+
+
 
 
